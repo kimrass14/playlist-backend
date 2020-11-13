@@ -1,0 +1,814 @@
+  [1m[35m (184.0ms)[0m  [1m[35mCREATE DATABASE "playlists_songs_app_api_development" ENCODING = 'unicode'[0m
+  [1m[35m (91.2ms)[0m  [1m[35mCREATE DATABASE "playlists_songs_app_api_test" ENCODING = 'unicode'[0m
+  [1m[35m (18.4ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (3.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3813637943282040615)[0m
+  [1m[35m (2.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreatePlaylists (20201113181422)
+  [1m[35m (5.9ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (11.9ms)[0m  [1m[35mCREATE TABLE "playlists" ("id" bigserial primary key, "title" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (3.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20201113181422"]]
+  [1m[35m (0.8ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateSongs (20201113181602)
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.2ms)[0m  [1m[35mCREATE TABLE "songs" ("id" bigserial primary key, "title" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mprimary::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20201113181602"]]
+  [1m[35m (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.6ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (1.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2020-11-13 18:17:02.840755"], ["updated_at", "2020-11-13 18:17:02.840755"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT pg_advisory_unlock(3813637943282040615)[0m
+  [1m[35m (1.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3813637943282040615)[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateRosters (20201113181853)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (11.4ms)[0m  [1m[35mCREATE TABLE "rosters" ("id" bigserial primary key, "playlist_id" bigint NOT NULL, "song_id" bigint NOT NULL, "plays" integer, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_2b63b7de8e"
+FOREIGN KEY ("playlist_id")
+  REFERENCES "playlists" ("id")
+, CONSTRAINT "fk_rails_575ddba74c"
+FOREIGN KEY ("song_id")
+  REFERENCES "songs" ("id")
+)[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE  INDEX  "index_rosters_on_playlist_id" ON "rosters"  ("playlist_id")[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE  INDEX  "index_rosters_on_song_id" ON "rosters"  ("song_id")[0m
+  [1m[36mprimary::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20201113181853"]]
+  [1m[35m (1.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(3813637943282040615)[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/songs" for ::1 at 2020-11-13 13:30:30 -0600
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by SongsController#index as HTML
+  [1m[36mSong Load (1.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  ↳ app/controllers/songs_controller.rb:8:in `index'
+Completed 200 OK in 13ms (Views: 2.1ms | ActiveRecord: 4.1ms | Allocations: 3062)
+
+
+Started GET "/playlist" for ::1 at 2020-11-13 13:30:34 -0600
+  
+ActionController::RoutingError (No route matches [GET] "/playlist"):
+  
+actionpack (6.0.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.4) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.4) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.4) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.4) lib/rails/engine.rb:527:in `call'
+puma (4.3.6) lib/puma/configuration.rb:228:in `call'
+puma (4.3.6) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.6) lib/puma/server.rb:472:in `process_client'
+puma (4.3.6) lib/puma/server.rb:328:in `block in run'
+puma (4.3.6) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/playlists" for ::1 at 2020-11-13 13:30:37 -0600
+Processing by PlaylistsController#index as HTML
+  [1m[36mPlaylist Load (1.1ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 9ms (Views: 2.0ms | ActiveRecord: 2.9ms | Allocations: 2361)
+
+
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mPlaylist Create (0.9ms)[0m  [1m[32mINSERT INTO "playlists" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Playlist 1"], ["created_at", "2020-11-13 19:32:32.699360"], ["updated_at", "2020-11-13 19:32:32.699360"]]
+  [1m[35m (0.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mPlaylist Create (0.6ms)[0m  [1m[32mINSERT INTO "playlists" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Playlist 2"], ["created_at", "2020-11-13 19:32:48.135519"], ["updated_at", "2020-11-13 19:32:48.135519"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mPlaylist Exists? (0.8ms)[0m  [1m[34mSELECT 1 AS one FROM "playlists" LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mPlaylist Load (0.5ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mSong Create (0.8ms)[0m  [1m[32mINSERT INTO "songs" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "All of Me"], ["created_at", "2020-11-13 19:33:50.857272"], ["updated_at", "2020-11-13 19:33:50.857272"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mSong Create (0.5ms)[0m  [1m[32mINSERT INTO "songs" ("title", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["title", "Ordinary People"], ["created_at", "2020-11-13 19:34:21.638510"], ["updated_at", "2020-11-13 19:34:21.638510"]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mSong Exists? (0.8ms)[0m  [1m[34mSELECT 1 AS one FROM "songs" LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mPlaylist Load (0.2ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mRoster Create (3.6ms)[0m  [1m[32mINSERT INTO "rosters" ("playlist_id", "song_id", "plays", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["playlist_id", 1], ["song_id", 1], ["plays", 5], ["created_at", "2020-11-13 19:38:17.116524"], ["updated_at", "2020-11-13 19:38:17.116524"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mPlaylist Load (0.2ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mRoster Create (0.5ms)[0m  [1m[32mINSERT INTO "rosters" ("playlist_id", "song_id", "plays", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["playlist_id", 2], ["song_id", 1], ["plays", 1], ["created_at", "2020-11-13 19:38:49.676251"], ["updated_at", "2020-11-13 19:38:49.676251"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mRoster Create (0.5ms)[0m  [1m[32mINSERT INTO "rosters" ("playlist_id", "song_id", "plays", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["playlist_id", 2], ["song_id", 2], ["plays", 100], ["created_at", "2020-11-13 19:39:21.586689"], ["updated_at", "2020-11-13 19:39:21.586689"]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mRoster Create (0.7ms)[0m  [1m[32mINSERT INTO "rosters" ("playlist_id", "song_id", "plays", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["playlist_id", 1], ["song_id", 2], ["plays", 20], ["created_at", "2020-11-13 19:39:49.816999"], ["updated_at", "2020-11-13 19:39:49.816999"]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/playlists" for ::1 at 2020-11-13 13:40:09 -0600
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by PlaylistsController#index as HTML
+  [1m[36mPlaylist Load (0.8ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 18ms (Views: 5.3ms | ActiveRecord: 8.1ms | Allocations: 5063)
+
+
+Started GET "/songs" for ::1 at 2020-11-13 13:40:15 -0600
+Processing by SongsController#index as HTML
+  [1m[36mSong Load (0.6ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  ↳ app/controllers/songs_controller.rb:8:in `index'
+Completed 200 OK in 14ms (Views: 5.4ms | ActiveRecord: 4.9ms | Allocations: 4194)
+
+
+Started GET "/rosters" for ::1 at 2020-11-13 13:40:27 -0600
+Processing by RostersController#index as HTML
+  [1m[36mRoster Load (0.7ms)[0m  [1m[34mSELECT "rosters".* FROM "rosters"[0m
+  ↳ app/controllers/rosters_controller.rb:8:in `index'
+Completed 200 OK in 25ms (Views: 16.6ms | ActiveRecord: 5.1ms | Allocations: 5294)
+
+
+Started GET "/rosters" for ::1 at 2020-11-13 13:46:33 -0600
+Processing by RostersController#index as HTML
+  [1m[36mRoster Load (0.9ms)[0m  [1m[34mSELECT "rosters".* FROM "rosters"[0m
+  ↳ app/controllers/rosters_controller.rb:8:in `index'
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/rosters_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/rosters_controller.rb:8:in `index'
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/rosters_controller.rb:8:in `index'
+  [1m[36mCACHE Song Load (0.0ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/rosters_controller.rb:8:in `index'
+  [1m[36mCACHE Playlist Load (0.0ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/rosters_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/rosters_controller.rb:8:in `index'
+  [1m[36mCACHE Playlist Load (0.0ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" WHERE "playlists"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/rosters_controller.rb:8:in `index'
+  [1m[36mCACHE Song Load (0.0ms)[0m  [1m[34mSELECT "songs".* FROM "songs" WHERE "songs"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  ↳ app/controllers/rosters_controller.rb:8:in `index'
+Completed 200 OK in 35ms (Views: 0.1ms | ActiveRecord: 2.6ms | Allocations: 19418)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 13:46:41 -0600
+Processing by PlaylistsController#index as HTML
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.6ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.8ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 18ms (Views: 0.1ms | ActiveRecord: 1.8ms | Allocations: 6540)
+
+
+Started GET "/songs" for ::1 at 2020-11-13 13:46:46 -0600
+Processing by SongsController#index as HTML
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs"[0m
+  ↳ app/controllers/songs_controller.rb:8:in `index'
+  [1m[36mPlaylist Load (0.5ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" INNER JOIN "rosters" ON "playlists"."id" = "rosters"."playlist_id" WHERE "rosters"."song_id" = $1[0m  [["song_id", 1]]
+  ↳ app/controllers/songs_controller.rb:8:in `index'
+  [1m[36mPlaylist Load (0.5ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists" INNER JOIN "rosters" ON "playlists"."id" = "rosters"."playlist_id" WHERE "rosters"."song_id" = $1[0m  [["song_id", 2]]
+  ↳ app/controllers/songs_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 1.4ms | Allocations: 3691)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:11:35 -0600
+  [1m[35m (1.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.7ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (1.0ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 63ms (Views: 0.1ms | ActiveRecord: 13.2ms | Allocations: 14876)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:12:51 -0600
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.8ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (1.0ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.6ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 58ms (Views: 0.2ms | ActiveRecord: 14.3ms | Allocations: 14876)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:16:46 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.5ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.6ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.2ms | ActiveRecord: 1.5ms | Allocations: 3325)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:19:35 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (1.0ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.9ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 22ms (Views: 0.5ms | ActiveRecord: 2.4ms | Allocations: 3325)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:20:11 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (1.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (1.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 11ms (Views: 0.1ms | ActiveRecord: 2.8ms | Allocations: 3325)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:20:11 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 1.1ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:21:27 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (1.1ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (1.0ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 12ms (Views: 0.3ms | ActiveRecord: 2.4ms | Allocations: 3325)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:21:27 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 8ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3306)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:22:10 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 9ms (Views: 0.3ms | ActiveRecord: 1.1ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:22:14 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 1.0ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:22:18 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.2ms | ActiveRecord: 1.1ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:22:24 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 8ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:22:32 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.7ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:22:35 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 11ms (Views: 0.1ms | ActiveRecord: 1.1ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:22:55 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 0.8ms | Allocations: 3306)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:36:35 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (1.1ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (1.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 27ms (Views: 0.9ms | ActiveRecord: 3.2ms | Allocations: 3407)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:36:35 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.5ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (4.0ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (1.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 18ms (Views: 0.1ms | ActiveRecord: 5.9ms | Allocations: 3306)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:36:35 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.6ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.9ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 9ms (Views: 0.1ms | ActiveRecord: 2.0ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:36:35 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.6ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 1.2ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:37:30 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 1.0ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:38:05 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 1.0ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:38:51 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:42:37 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.6ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.6ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 21ms (Views: 0.5ms | ActiveRecord: 1.6ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:42:43 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (9.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (2.9ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.8ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 26ms (Views: 0.1ms | ActiveRecord: 13.0ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:42:57 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 0.8ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:43:42 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:44:03 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:44:12 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.2ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:44:18 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:44:23 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 9ms (Views: 0.1ms | ActiveRecord: 1.0ms | Allocations: 3309)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:44:26 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 12ms (Views: 0.1ms | ActiveRecord: 1.0ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:50:32 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.9ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (1.0ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 16ms (Views: 0.4ms | ActiveRecord: 2.5ms | Allocations: 3407)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:53:03 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 1.2ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:53:16 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 1.1ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:53:46 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 0.7ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:53:54 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:54:22 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.2ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 0.8ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:54:28 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.5ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 9ms (Views: 0.1ms | ActiveRecord: 1.3ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:54:37 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.5ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.7ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 9ms (Views: 0.1ms | ActiveRecord: 1.5ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 14:54:47 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:09:11 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (1.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (1.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (1.0ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 23ms (Views: 0.5ms | ActiveRecord: 3.8ms | Allocations: 3407)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:09:13 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (1.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.7ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.7ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 15ms (Views: 0.1ms | ActiveRecord: 2.7ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:09:38 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 8ms (Views: 0.1ms | ActiveRecord: 1.3ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:09:46 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.5ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 10ms (Views: 0.1ms | ActiveRecord: 1.3ms | Allocations: 3306)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:09:53 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.8ms | Allocations: 3306)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:09:59 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (1.0ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 10ms (Views: 0.1ms | ActiveRecord: 1.7ms | Allocations: 3306)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:11:46 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 9ms (Views: 0.1ms | ActiveRecord: 1.2ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:12:50 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:12:56 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:13:06 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 7ms (Views: 0.1ms | ActiveRecord: 1.2ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:13:15 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.4ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.6ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 10ms (Views: 0.2ms | ActiveRecord: 1.4ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:13:20 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.7ms | Allocations: 3308)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:13:42 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.7ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:13:45 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.8ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:13:51 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.3ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.2ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 0.8ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:13:57 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
+Started GET "/playlists" for ::1 at 2020-11-13 15:14:03 -0600
+Processing by PlaylistsController#index as */*
+  [1m[36mPlaylist Load (0.4ms)[0m  [1m[34mSELECT "playlists".* FROM "playlists"[0m
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 1]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+  [1m[36mSong Load (0.3ms)[0m  [1m[34mSELECT "songs".* FROM "songs" INNER JOIN "rosters" ON "songs"."id" = "rosters"."song_id" WHERE "rosters"."playlist_id" = $1[0m  [["playlist_id", 2]]
+  ↳ app/controllers/playlists_controller.rb:8:in `index'
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.9ms | Allocations: 3305)
+
+
